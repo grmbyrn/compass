@@ -7,7 +7,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.ALLOWED_ORIGIN }));
+const allowedOrigin = process.env.ALLOWED_ORIGIN;
+if (!allowedOrigin) {
+  throw new Error("ALLOWED_ORIGIN is not set");
+}
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
 //test route
