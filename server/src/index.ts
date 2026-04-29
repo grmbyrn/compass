@@ -1,18 +1,22 @@
-import './lib/env'
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
+import {clerkMiddleware} from '@clerk/express'
+import { env } from "./lib/env";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
-app.use(cors({ origin: process.env.ALLOWED_ORIGIN }));
+app.use(
+  cors({
+    origin: env.ALLOWED_ORIGIN,
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(clerkMiddleware())
 
 //test route
-app.get("/api/health", (_req, res) => {
+app.get("/api/v1/health", (_req, res) => {
   res.json({ status: "ok", message: "Server is working" });
 });
 
