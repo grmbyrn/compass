@@ -1,17 +1,14 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import {clerkMiddleware} from '@clerk/express'
-import { requireAuthMiddleware } from './middleware/auth';
-
-dotenv.config();
+import { env } from "./lib/env";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGIN || "http://localhost:5173",
+    origin: env.ALLOWED_ORIGIN,
     credentials: true,
   })
 );
@@ -21,10 +18,6 @@ app.use(clerkMiddleware())
 //test route
 app.get("/api/v1/health", (_req, res) => {
   res.json({ status: "ok", message: "Server is working" });
-});
-
-app.get("/api/v1/protected", requireAuthMiddleware, (req, res) => {
-  res.json({ message: "You are authenticated" });
 });
 
 app.listen(PORT, () =>
